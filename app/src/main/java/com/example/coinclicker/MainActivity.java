@@ -1,6 +1,9 @@
 package com.example.coinclicker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,44 +11,59 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.coinclicker.databinding.ActivityMainBinding;
+
 public class MainActivity extends AppCompatActivity {
 
-    private TextView coinCounter;
-    private ImageButton coin;
+    ActivityMainBinding binding;
 
-    int cont;
-    float coin_multiplier;
-    float click_multiplier = 1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        replaceFragment(new HomeFragment());
 
-        coinCounter = findViewById(R.id.coinCounter);
-        coin = findViewById(R.id.coin);
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+
+            switch (item.getItemId()){
+
+                case R.id.home:
+                    replaceFragment(new HomeFragment());
+                    break;
+                case R.id.shop:
+                    replaceFragment(new ShopFragment());
+                    break;
+                case R.id.settings:
+                    replaceFragment(new SettingsFragment());
+                    break;
+            }
+
+            return true;
+        });
 
 
     }
 
-    public void startService(View view){
-        Intent intent = new Intent(this, CoinsPerSecond.class);
-        intent.putExtra("multiplier", coin_multiplier);
-        startService(intent);
+    private void replaceFragment(Fragment fragment){
 
-
-    }
-
-    public void stopService(View view){
-        Intent it = new Intent("COINS_SECONDS");
-        stopService(it);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout,fragment);
+        fragmentTransaction.commit();
 
     }
 
 
-    public void basicClick(View v){
-        cont += click_multiplier;
-        coinCounter.setText(String.valueOf(cont));
-    }
+
+
+
+
+
+
+
+
+
 }
