@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,19 +31,25 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     private TextView coinCounter;
-    private ImageButton coin;
+    private ImageButton coin_button;
 
     private TextView coinRatio;
 
-    float cont;
-    float coin_multiplier = 0;
-    float click_multiplier = 1;
+    Coin coin = Coin.getInstance();
+
+    private float cont = coin.getCoins();
+    private float coin_multiplier = coin.getMultiplier();
+    private int click_multiplier = coin.getClick_multiplier();
 
     DecimalFormat df = new DecimalFormat("#");
 
-    String coin_text = "Por segundo: ";
 
-    public String coin_text2 = coin_text + coin_multiplier;
+
+
+
+    private String coin_text = "Por segundo: ";
+
+    private String coin_text2 = coin_text + coin_multiplier;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -79,6 +87,7 @@ public class HomeFragment extends Fragment {
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,22 +95,42 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         coinCounter = view.findViewById(R.id.coinCounter);
-        coin = view.findViewById(R.id.coin);
+        coin_button = view.findViewById(R.id.coin_button);
         coinRatio = view.findViewById(R.id.coinRatio);
         coinRatio.setText(coin_text2);
 
-        coin.setOnClickListener(new View.OnClickListener() {
+        coin_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 oneClick(v);
             }
         });
-                return view;
+
+
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask(){
+            public void run(){
+                cont += coin_multiplier;
+                coinCounter.setText(String.valueOf((df.format(cont))));
+                coin.setCoins(cont);
+
+            }
+        };
+
+        timer.scheduleAtFixedRate(task, 0, 1000);
+
+        return view;
     }
 
     public void oneClick(View view){
         cont += click_multiplier;
         coinCounter.setText(String.valueOf((df.format(cont))));
+        coin.setCoins(cont);
     }
+
+
+
+
+
 
 }

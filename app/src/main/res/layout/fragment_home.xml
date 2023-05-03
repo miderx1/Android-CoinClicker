@@ -55,7 +55,7 @@
         tools:ignore="TextViewEdits" />
 
     <ImageButton
-        android:id="@+id/coin"
+        android:id="@+id/coin_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#00705151"
