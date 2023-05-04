@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -26,6 +27,7 @@ public class ShopFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
@@ -41,8 +43,17 @@ public class ShopFragment extends Fragment implements View.OnClickListener{
     private ImageButton click1;
     private int click1_amt;
 
+    private ImageView finger;
+
 
     private TextView coinView;
+
+    private TextView click_price;
+
+    private TextView click_desc;
+
+    private String desc1 = "Ganha mais " ;
+
 
     DecimalFormat df = new DecimalFormat("#");
 
@@ -90,18 +101,12 @@ public class ShopFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
 
-        click1 = view.findViewById(R.id.click1);
-        click1.setOnClickListener(this);
+        click_price = view.findViewById(R.id.click_price);
 
-        mult1 = view.findViewById(R.id.mult1);
-        mult1.setOnClickListener(this);
+        click_desc = view.findViewById(R.id.click_desc);
 
-        obj1 = view.findViewById(R.id.obj1);
-        obj1.setOnClickListener(this);
-
-        obj2 = view.findViewById(R.id.obj2);
-        obj2.setOnClickListener(this);
-
+        finger = view.findViewById(R.id.finger);
+        finger.setOnClickListener(this);
 
         coinView = view.findViewById(R.id.coinView);
         coinView.setText(String.valueOf((df.format(coins))));
@@ -114,50 +119,20 @@ public class ShopFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         switch(view.getId()){
-            case R.id.click1:
+            case R.id.finger:
                 if (coins >= 30)
                 {
-                    click_multiplier += 1;
+                    multiplier += 0.1;
                     coins -= 30;
                     coin.setCoins(coins);
                     coin.setClick_multiplier(click_multiplier);
                 }
                 break;
 
-            case R.id.mult1:
-                if (coins >= 30)
-                {
-                    multiplier += 0.2;
-                    coins -= 30;
-                    coin.setCoins(coins);
-                    coin.setMultiplier(multiplier);
-                }
-
-                break;
-            case R.id.obj1:
-                if (coins >= 100)
-                {
-                    multiplier += 2;
-                    coins -= 100;
-                    coin.setCoins(coins);
-                    coin.setMultiplier(multiplier);
-                }
-
-                break;
-            case R.id.obj2:
-                if (coins >= 200)
-                {
-                    multiplier += 5;
-                    coins -= 200;
-                    coin.setCoins(coins);
-                    coin.setMultiplier(multiplier);
-
-
-                }
-                break;
 
 
         }
+        coinView.setText(String.valueOf((df.format(coins))));
 
     }
 }

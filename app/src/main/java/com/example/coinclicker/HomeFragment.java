@@ -1,5 +1,10 @@
 package com.example.coinclicker;
 
+import static android.content.Context.MODE_PRIVATE;
+import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
+
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,8 +16,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +32,8 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private SQLiteDatabase dadosUsuario;
 
     private TextView coinCounter;
     private ImageButton coin_button;
@@ -77,12 +82,22 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        try {
+            dadosUsuario = getActivity().openOrCreateDatabase("dados", MODE_PRIVATE, null);
+        }catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        Intent serviceIntent = new Intent(getActivity(), PerSecond.class);
+        getActivity().startService(serviceIntent);
 
 
     }
@@ -99,6 +114,8 @@ public class HomeFragment extends Fragment {
         coinRatio = view.findViewById(R.id.coinRatio);
         coinRatio.setText(coin_text2);
 
+        coinCounter.setText(String.valueOf((df.format(cont))));
+
         coin_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,18 +123,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask(){
-            public void run(){
-                cont += coin_multiplier;
-                coinCounter.setText(String.valueOf((df.format(cont))));
-                coin.setCoins(cont);
-
-            }
-        };
-
-        timer.scheduleAtFixedRate(task, 0, 1000);
 
         return view;
     }

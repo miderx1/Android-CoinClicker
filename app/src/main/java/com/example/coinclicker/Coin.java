@@ -33,6 +33,14 @@ public class Coin {
         this.multiplier = multiplier;
     }
 
+    public void incrementCoin(double incremento){
+        this.coins += incremento;
+    }
+
+    public void incrementMultiplier(float incremento){
+        this.multiplier += incremento;
+    }
+
     public int getClick_multiplier() {
         return click_multiplier;
     }
